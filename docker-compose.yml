@@ -1,0 +1,43 @@
+# One command to run everything:  docker compose up --build
+#   UI       http://localhost:3000
+#   API      http://localhost:8080   (Swagger UI: /swagger-ui.html)
+#   Postgres localhost:5432  (bajrix / bajrix)
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: bajrix
+      POSTGRES_USER: bajrix
+      POSTGRES_PASSWORD: bajrix
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bajrix -d bajrix"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/bajrix
+      DB_USER: bajrix
+      DB_PASSWORD: bajrix
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:

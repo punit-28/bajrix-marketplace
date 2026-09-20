@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: bajrix-marketplace
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/bajrix}
+    username: ${DB_USER:bajrix}
+    password: ${DB_PASSWORD:bajrix}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none          # schema is owned by Flyway migrations
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+  error:
+    include-message: never
+
+app:
+  cors-allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
+  # Stand-in for real auth: X-Seller-Id header. This lists sellers for the UI's "sell as" picker.
+  dev-seller-selector: true
+  # Guards the demo endpoint that changes a seller's status.
+  admin-token: ${ADMIN_TOKEN:dev-admin-token}
