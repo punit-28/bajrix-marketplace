@@ -1,11 +1,17 @@
-@"
-target/
-node_modules/
+# Backend
+backend/target/
+backend/error.log
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+
+# Environment
 .env
 .env.*
 !.env.example
-*.log
+
+# IDE
 .idea/
 .vscode/
-*.class
-"@ | Out-File -Encoding utf8 .gitignore
+*.iml
